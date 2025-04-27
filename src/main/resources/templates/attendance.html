@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8">
+<title>Attendance Form</title>
+<link rel="stylesheet" href="/css/styleAttendance.css">
+<link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+<body>
+<nav class="navbar">
+        <div class="left-section">
+            <div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a></div>
+            <ul class="nav-links">
+                <li><a href="/home" th:href="@{/home}">Home</a></li>
+                <li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+                <li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <span th:text="'Hi, ' + ${username}"></span>
+            <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+        </div>
+    </nav>
+    <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+    
+    <div class="container">
+		<h2>Attendance Form</h2>
+		<div th:if="${NoRosterMessage}" class="error-message">
+			<p th:text="${NoRosterMessage}"></p>
+		</div>
+		<div th:if="${successMessage}" class="success-message">
+			<p th:text="${successMessage}"></p>
+		</div>
+		<!-- <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}"> -->
+		 <form id="dayForm" th:action="@{${userRole == 'ADMIN' ? '/admin/attendance' : '/attendance'}}" method="get" sec:authorize="hasRole('ADMIN')">
+			<label for="day" sec:authorize="hasRole('ADMIN')">Select Day:</label> 
+			<select sec:authorize="hasRole('ADMIN')" id="day" name="day" onchange="this.form.submit()">
+				<option th:each="d : ${daysOfWeek}" th:value="${d}" th:text="${d}"
+					th:selected="${d == selectedDay}"></option>
+			</select>
+		</form>
+		<!-- </th:block> -->
+		
+		<!-- <th:block th:if="${#authorization.expression('hasRole(''USER'')')}"> -->
+		<div sec:authorize="hasRole('USER')">
+			<label sec:authorize="hasRole('USER')" for="day">Day:</label> 
+			<input sec:authorize="hasRole('USER')" type="text" id="day" name="day" th:value="${currentDay}" readonly />
+		</div>
+		<!-- </th:block> -->
+		
+		<!--  -->
+		<form action="/attendance/submit" method="post">
+		<p>Employee ID: <span th:text="${empId}"></span></p>
+            <p>Full Name: <span th:text="${fullName}"></span></p>
+            <p>Scheduled Hours: <span id="scheduledHours" th:text="${scheduledHours} + ' hours'"></span></p>
+            
+            
+            <input type="hidden" id="selectedDay" name="day"  
+       th:value="${#authorization.expression('hasRole(''ADMIN'')') ? selectedDay : currentDay}">
+            
+            
+            <div class="attendance-row">
+            <label for="loginTime" class="attendance-label">Login Time:</label>
+            <input type="time" id="loginTime" name="loginTime" class="attendance-input" onchange="calculateActualHours()" required>
+            </div>
+            
+            <div class="attendance-row">
+            <label for="logoutTime" class="attendance-label">Logout Time:</label>
+            <input type="time" id="logoutTime" name="logoutTime" class="attendance-input" onchange="calculateActualHours()" required>
+            </div>
+            
+            <p>Actual Hours: <span id="actualHours">0.00 hours</span></p>
+            
+            <button type="submit" id="submitButton" onclick="colourTableElements()" >Submit Attendance</button>
+        </form>
+    </div>
+    
+    <div class="attendance-container">
+    <h2 class="attendance-title">Weekly Attendance</h2>
+		<table class="attendance-table" border="1">
+			<thead>
+				<tr>
+					<th>Day</th>
+					<th>Date</th>
+					<th>Login Time</th>
+					<th>Logout Time</th>
+					<th>Scheduled Hours</th>
+					<th>Actual Hours</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="attendance : ${attendanceList}">
+					<!-- <td th:text="${attendance != null ? #temporals.format(attendance.submissionTimestamp, 'yyyy-MM-dd') : ''}"></td>
+                <td th:text="${attendance != null ? attendance.loginTime : ''}"></td>
+                <td th:text="${attendance != null ? attendance.logoutTime : ''}"></td>
+                <td th:text="${attendance != null ? attendance.scheduledHours : ''}"></td>
+                <td th:text="${attendance != null ? attendance.actualHours : ''}"></td> -->
+
+
+					<!-- <td th:text="${attendance.dayName}"></td>
+                <td th:text="${#temporals.format(attendance.date, 'dd-MMM')}"></td>
+                <td id="loginTimeTable" th:text="${attendance.loginTime != null ? attendance.loginTime : '--:--'}"></td>
+                <td id="logoutTimeTable" th:text="${attendance.logoutTime != null ? attendance.logoutTime : '--:--'}"></td>
+                <td id="ScheduledHoursTable" th:text="${attendance.scheduledHours != null ? attendance.scheduledHours : '--'}"></td>
+                <td id="actualHoursTable" th:text="${attendance.actualHours != null ? attendance.actualHours : '--'}"></td>
+                <td th:text="${attendance.status != null ? attendance.status : '--'}"></td> -->
+
+
+					<td th:text="${attendance.dayName}"></td>
+					<td th:text="${#temporals.format(attendance.date, 'dd-MMM')}"></td>
+					<td class="loginTimeTable" th:text="${attendance.loginTime != null ? attendance.loginTime : '--:--'}"></td>
+					<td class="logoutTimeTable" th:text="${attendance.logoutTime != null ? attendance.logoutTime : '--:--'}"></td>
+					<td class="scheduledHoursTable" th:text="${attendance.scheduledHours != null ? attendance.scheduledHours + ' hours' : '--'}"></td>
+					<td class="actualHoursTable" th:text="${attendance.actualHours != null ? attendance.actualHours + ' hours' : '--'}"></td>
+					<td th:text="${attendance.status != null ? attendance.status : '--'}"></td>
+				</tr>
+
+
+
+			</tbody>
+		</table>
+	</div>
+    <script>
+    function calculateActualHours() {
+        let loginTime = document.getElementById('loginTime').value;
+        let logoutTime = document.getElementById('logoutTime').value;
+        let scheduledHours = parseFloat(document.getElementById('scheduledHours').innerText);
+        let actualHoursElement = document.getElementById('actualHours');
+        
+        if (loginTime && logoutTime) {
+            let start = new Date('1970-01-01T' + loginTime + ':00');
+            let end = new Date('1970-01-01T' + logoutTime + ':00');
+            let diff = (end - start)/3600000;
+            let actualHours = diff.toFixed(2);
+            actualHoursElement.innerText = actualHours + " hours";
+            actualHoursElement.style.color = diff < scheduledHours ? 'red' : 'green';
+        }
+        else {
+            actualHoursElement.innerText = '0';
+            actualHoursElement.style.color = 'black'; // Default color
+        }
+    }
+    
+    /* window.onload =  function colourTableElements(){
+    	let loginTimeTable = parseFloat(document.getElementById('loginTimeTable').innerText);
+        let logoutTimeTable = parseFloat(document.getElementById('logoutTimeTable').innerText);
+    	let actualHoursTable = document.getElementById('actualHoursTable').innerText;
+    	let scheduledHoursTable = parseFloat(document.getElementById('scheduledHoursTable').innerText);
+    	console.log('The Script will load now.');
+    	
+    	if (loginTimeTable && logoutTimeTable) {
+            let start = new Date('1970-01-01T' + loginTimeTable + ':00');
+            let end = new Date('1970-01-01T' + logoutTimeTable + ':00');
+            let diff = (end - start)/3600000;
+            actualHoursTable.style.color = diff < scheduledHoursTable ? 'red' : 'green';
+        }
+        else {
+            actualHoursTable.innerText = '0';
+            actualHoursTable.style.color = 'black'; // Default color
+        }
+    }
+ */
+ 
+ 
+ function colourTableElements() {
+	    
+
+	    // Get all rows and loop over them
+	    let rows = document.querySelectorAll('.attendance-table tbody tr');
+
+	    rows.forEach(row => {
+	        let loginTimeTable = row.querySelector('.loginTimeTable')?.innerText.trim();
+	        let logoutTimeTable = row.querySelector('.logoutTimeTable')?.innerText.trim();
+	        let actualHoursTable = row.querySelector('.actualHoursTable');
+	        let scheduledHoursTable = parseFloat(row.querySelector('.scheduledHoursTable')?.innerText.replace(' hours', '').trim()) || 0;
+	        let statusElement = row.querySelector('td:last-child');
+
+	        if (loginTimeTable && logoutTimeTable) {
+	            let start = new Date(`1970-01-01T${loginTimeTable}:00`);
+	            let end = new Date(`1970-01-01T${logoutTimeTable}:00`);
+
+	            if (!isNaN(start) && !isNaN(end)) {
+	                let diff = (end - start) / 3600000; // Convert milliseconds to hours
+	                actualHoursTable.innerText = diff.toFixed(2) + ' hours';
+	                actualHoursTable.style.color = diff < scheduledHoursTable ? 'red' : 'green';
+	            } else {
+	                actualHoursTable.innerText = '--';
+	                actualHoursTable.style.color = 'black';
+	            }
+	        } 
+	        else {
+	            actualHoursTable.innerText = '--';
+	            actualHoursTable.style.color = 'black';
+	        }
+	    
+	        if (statusElement) {
+	            let status = statusElement.innerText.trim().toLowerCase();
+	            if (status === 'approved') {
+	                statusElement.style.color = 'green';
+	            } else if (status === 'pending') {
+	                statusElement.style.color = 'blue';
+	            } else {
+	                statusElement.style.color = 'black'; // Default color for other statuses
+	            }
+	        }
+ 		});
+	}
+
+ 
+    function handleScheduledHours() {
+        let scheduledHours = document.getElementById('scheduledHours').innerText.trim();
+        let loginInput = document.getElementById('loginTime');
+        let logoutInput = document.getElementById('logoutTime');
+        let submitButton = document.getElementById('submitButton');
+        let dayform = document.getElementById('day');
+
+        console.log("Scheduled Hours:", `"${scheduledHours}"`); // Debugging
+
+        if (scheduledHours === "0 hours" || scheduledHours === "0.0 hours" || scheduledHours === "0.00 hours") {
+            loginInput.disabled = true;
+            logoutInput.disabled = true;
+            submitButton.disabled = true;
+            if(scheduledHours === "null hours"|| scheduledHours === "Null hours"){
+            	dayform.disabled=true;
+            	loginInput.disabled = true;
+                logoutInput.disabled = true;
+                submitButton.disabled = true;
+            }
+        } else {
+            loginInput.disabled = false;
+            logoutInput.disabled = false;
+            submitButton.disabled = false;
+        }
+    }
+
+    window.onload = function() {
+        handleScheduledHours();
+        colourTableElements();
+    };
+
+    document.getElementById('day').addEventListener('change', function(event) {
+        event.preventDefault(); // ✅ Prevent form submission
+        document.getElementById('selectedDay').value = this.value;
+        handleScheduledHours();
+    });
+    
+</script>
+    
+</body>
+</html>

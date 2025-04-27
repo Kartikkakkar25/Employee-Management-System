@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <link rel="stylesheet" href="/css/styleIndex.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a></div>
+            <ul class="nav-links">
+                <li><a href="/home" th:href="@{/home}">Home</a></li>
+                <li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+                <li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <span th:text="'Hi, ' + ${username}"></span>
+            <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+        </div>
+    </nav>
+    
+    <div class="dashboard-container">
+        <h1>Project 1</h1>
+        <h2>Welcome to Employee Management System </h2>
+       
+        
+        <div class="form-buttons">
+            <a href="/roster" class="form-btn">Roster Form</a>
+            <a href="/admin/attendance" class="form-btn">Attendance Form</a>
+            <a href="/recruitment" class="form-btn">Recruitment Form</a>
+            <a href="/termination" class="form-btn">Termination Form</a>
+            <a href="/amendment" class="form-btn">Amendment Form</a>
+            <a href="/attendance/approval" class="form-btn">Attendance Approval</a>
+        </div>
+
+        <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+    </div>
+</body>
+</html>

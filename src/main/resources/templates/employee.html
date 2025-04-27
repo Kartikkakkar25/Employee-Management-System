@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/styleEmployee.css">
+</head>
+<body>
+   <nav class="navbar">
+        <div class="left-section">
+            <div class="logo"><a href="/index" th:href="@{/index}" class="home-anch">Employee Management System</a></div>
+            <ul class="nav-links">
+                <li><a href="/index" th:href="@{/index}">Home</a></li>
+                <li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+                <li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+                <li><a href="/employee" th:href="@{/employee}">Employee</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <span th:text="'Hi, ' + ${username}"></span>
+            <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+        </div>
+    </nav>
+    <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8">
+<title>Recruitment Form</title>
+<link rel="stylesheet" href="/css/styleRoster.css">
+<link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+<body>
+<nav class="navbar">
+        <div class="left-section">
+            <div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a></div>
+            <ul class="nav-links">
+                <li><a href="/home" th:href="@{/home}">Home</a></li>
+                <li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+                <li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <span th:text="'Hi, ' + ${username}"></span>
+            <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+        </div>
+    </nav>
+    <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+    
+    <div sec:authorize="hasRole('ADMIN')" class="container">
+    	<div>
+    	<h2>Recruitment Form</h2>
+    	</div>
+	
+		<div id=successMessage th:if="${successMessage}" class="alert success">
+			<span th:text="${successMessage}"></span>
+		</div>
+		<div id=errorMessage th:if="${errorMessage}" class="alert error">
+			<span th:text="${errorMessage}"></span>
+		</div>
+		
+		<form id="rosterForm" th:action="@{/recruitment/submit}" th:object="${roster}" method="post">
+		
+		<!-- <input type="hidden" th:field="*{id}" /> -->
+	
+            <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" th:field="*{fullName}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Address 1:</label>
+                <input type="text" th:field="*{address1}" required>
+            </div>
+            
+             <div class="form-group">
+                <label>Address 2:</label>
+                <input type="text" th:field="*{address2}" required>
+            </div>
+
+            <div class="form-group">
+                <label>City:</label>
+                <input type="text" th:field="*{city}" required>
+            </div>
+
+            <div class="form-group">
+                <label>State:</label>
+                <input type="text" th:field="*{state}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Postal Code:</label>
+                <input type="text" th:field="*{postalCode}" required>
+            </div>
+
+            <h3>Shift Timings</h3>
+
+            <div class="form-group">
+                <label>Sunday Shift:</label>
+                <input type="time" th:field="*{sundayShiftStart}"> to
+                <input type="time" th:field="*{sundayShiftEnd}">
+            </div>
+
+            <div class="form-group">
+                <label>Monday Shift:</label>
+                <input type="time" th:field="*{mondayShiftStart}"> to
+                <input type="time" th:field="*{mondayShiftEnd}">
+            </div>
+
+            <div class="form-group">
+                <label>Tuesday Shift:</label>
+                <input type="time" th:field="*{tuesdayShiftStart}"> to
+                <input type="time" th:field="*{tuesdayShiftEnd}">
+            </div>
+
+            <div class="form-group">
+                <label>Wednesday Shift:</label>
+                <input type="time" th:field="*{wednesdayShiftStart}"> to
+                <input type="time" th:field="*{wednesdayShiftEnd}">
+            </div>
+
+            <div class="form-group">
+                <label>Thursday Shift:</label>
+                <input type="time" th:field="*{thursdayShiftStart}"> to
+                <input type="time" th:field="*{thursdayShiftEnd}">
+            </div>
+
+            <div class="form-group">
+                <label>Friday Shift:</label>
+                <input type="time" th:field="*{fridayShiftStart}"> to
+                <input type="time" th:field="*{fridayShiftEnd}">
+            </div>
+
+            <div class="form-group">
+                <label>Saturday Shift:</label>
+                <input type="time" th:field="*{saturdayShiftStart}"> to
+                <input type="time" th:field="*{saturdayShiftEnd}">
+            </div>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+	<!-- Write your Page's code here only -->
+	
+	</div>
+	<div sec:authorize="hasRole('USER')">
+    	<h1 style="text-align:center;">Error 401!</h1><br>
+    	<h2 style="text-align:center;">Forbidden Page </h2><br>
+    	<h3 style="text-align:center;">This Page is only for Admins!</h3>
+    </div>
+</body>
+</html>

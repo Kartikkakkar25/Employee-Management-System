@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <link rel="stylesheet" href="/css/styleFaq.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a></div>
+            <ul class="nav-links">
+                <li><a href="/home" th:href="@{/home}">Home</a></li>
+                <li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+                <li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <span th:text="'Hi, ' + ${username}"></span>
+            <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+        </div>
+    </nav>
+    <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+    
+    <div class="faq-container">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <h3>What is the Employee Management System (EMS)?</h3>
+            <p>The EMS is a web-based application that helps organizations manage employee data efficiently.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Who can access the Employee Management System?</h3>
+            <p>Only registered users with valid login credentials can access the system.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>How do I reset my password?</h3>
+            <p>Click on the "Forgot Password" link on the login page or contact the administrator.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Why is my username showing as ‘null’ after logging in?</h3>
+            <p>This may be due to session issues. Try refreshing the page or logging out and back in.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>How do I view employee details?</h3>
+            <p>If you are an Admin, Go to the "Employees" section in the navigation menu to see the list of all employees.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Can I change my username?</h3>
+            <p>No, usernames are assigned by the admin and cannot be changed.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Is my data secure?</h3>
+            <p>Yes, the system uses Spring Security to protect user data and enforce access control.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>What should I do if I suspect unauthorized access to my account?</h3>
+            <p>Immediately reset your password and report the issue to the admin.</p>
+        </div>
+    </div>
+</body>
+</html>

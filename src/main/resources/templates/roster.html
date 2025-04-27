@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Roster Form</title>
+    <link rel="stylesheet" href="/css/styleRoster.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a></div>
+            <ul class="nav-links">
+                <li><a href="/home" th:href="@{/home}">Home</a></li>
+                <li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+                <li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <span th:text="'Hi, ' + ${username}"></span>
+            <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+        </div>
+    </nav>
+
+    <form id="logoutForm" th:action="@{/logout}" method="post"></form>
+
+	<div sec:authorize="hasRole('ADMIN')">
+		<form action="/roster/fetch" method="post">
+			<label for="empId">Select Employee:</label> <select name="empId">
+				<option 
+					th:each="user : ${users}" 
+					th:value="${user.emp_id}"
+					th:text="${user.username}"
+					th:selected="${selectedEmpId != null and selectedEmpId == user.emp_id}">
+				</option>
+			</select>
+			<button type="submit">Fetch Roster</button>
+		</form>
+	</div>
+    <div sec:authorize="hasRole('ADMIN')" class="container">
+
+		<div class="heading-with-status">
+			<h2>Roster Form</h2>
+			<div class="status-indicator" th:if="${roster != null}">
+				<span th:if="${roster.status == 'Active'}" class="status-active">&#9679;
+					Active</span> <span th:if="${roster.status == 'Inactive'}"
+					class="status-inactive">&#9679; Inactive</span>
+			</div>
+		</div>
+
+		<!-- Success Message -->
+		<div id=successMessage th:if="${successMessage}" class="alert success">
+			<span th:text="${successMessage}"></span>
+		</div>
+		<div id=errorMessage th:if="${errorMessage}" class="alert error">
+			<span th:text="${errorMessage}"></span>
+		</div>
+
+		<div class="toggle-container">
+			<label class="toggle-label">New Entry</label> <label class="switch">
+				<input type="checkbox" id="toggleMode"> <span
+				class="slider round"></span>
+			</label> <label class="toggle-label">Update Entry</label>
+		</div> 
+	
+
+		<form id="rosterForm" th:action="@{/roster}" th:object="${roster}" method="post" th:classappend="${roster.status == 'Inactive'} ? 'disabled-form' : ''">
+		
+		<!-- <input type="hidden" th:field="*{id}" /> -->
+		<input type="hidden" id="updateMode" name="updateMode" value="false" th:disabled="${roster.status == 'Inactive'}">
+		<input type="hidden" id="empId" name="empId" th:value="${selectedEmpId}" th:disabled="${roster.status == 'Inactive'}">
+		
+
+            <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" th:field="*{fullName}" required th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>Address 1:</label>
+                <input type="text" th:field="*{address1}" required th:disabled="${roster.status == 'Inactive'}">
+            </div>
+            
+             <div class="form-group">
+                <label>Address 2:</label>
+                <input type="text" th:field="*{address2}" required th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>City:</label>
+                <input type="text" th:field="*{city}" required th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>State:</label>
+                <input type="text" th:field="*{state}" required th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>Postal Code:</label>
+                <input type="text" th:field="*{postalCode}" required th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <h3>Shift Timings</h3>
+
+            <div class="form-group">
+                <label>Sunday Shift:</label>
+                <input type="time" th:field="*{sundayShiftStart}" th:disabled="${roster.status == 'Inactive'}"> to
+                <input type="time" th:field="*{sundayShiftEnd}" th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>Monday Shift:</label>
+                <input type="time" th:field="*{mondayShiftStart}" th:disabled="${roster.status == 'Inactive'}"> to
+                <input type="time" th:field="*{mondayShiftEnd}" th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>Tuesday Shift:</label>
+                <input type="time" th:field="*{tuesdayShiftStart}" th:disabled="${roster.status == 'Inactive'}"> to
+                <input type="time" th:field="*{tuesdayShiftEnd}" th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>Wednesday Shift:</label>
+                <input type="time" th:field="*{wednesdayShiftStart}" th:disabled="${roster.status == 'Inactive'}"> to
+                <input type="time" th:field="*{wednesdayShiftEnd}" th:disabled="${roster.status == 'Inactive'}" >
+            </div>
+
+            <div class="form-group">
+                <label>Thursday Shift:</label>
+                <input type="time" th:field="*{thursdayShiftStart}" th:disabled="${roster.status == 'Inactive'}"> to
+                <input type="time" th:field="*{thursdayShiftEnd}" th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>Friday Shift:</label>
+                <input type="time" th:field="*{fridayShiftStart}" th:disabled="${roster.status == 'Inactive'}" > to
+                <input type="time" th:field="*{fridayShiftEnd}" th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <div class="form-group">
+                <label>Saturday Shift:</label>
+                <input type="time" th:field="*{saturdayShiftStart}" th:disabled="${roster.status == 'Inactive'}"> to
+                <input type="time" th:field="*{saturdayShiftEnd}" th:disabled="${roster.status == 'Inactive'}">
+            </div>
+
+            <button type="submit" class="submit-btn" th:disabled="${roster.status == 'Inactive'}">Submit</button>
+        </form>
+    </div>
+    <div sec:authorize="hasRole('USER')">
+    	<h1 style="text-align:center;">Error 401!</h1><br>
+    	<h2 style="text-align:center;">Forbidden Page </h2><br>
+    	<h3 style="text-align:center;">This Page is only for Admins!</h3>
+    </div>
+	<script>
+		document.getElementById("toggleMode").addEventListener("change", function() {
+					let updateMode = this.checked;
+					document.getElementById("updateMode").value = updateMode;
+					
+					if (!updateMode) {
+			            document.getElementById("rosterForm").reset();
+			        }
+				});
+	</script>
+</body>
+</html>

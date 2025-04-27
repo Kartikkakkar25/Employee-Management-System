@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<meta charset="UTF-8">
+	<title>Attendance Approval</title>
+	<link rel="stylesheet" href="/css/styleAttendanceApproval.css">
+	<link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+
+<body>
+	<nav class="navbar">
+		<div class="left-section">
+			<div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a>
+			</div>
+			<ul class="nav-links">
+				<li><a href="/home" th:href="@{/home}">Home</a></li>
+				<li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+				<li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+			</ul>
+		</div>
+		<div class="user-section">
+			<span th:text="'Hi, ' + ${username}"></span>
+			<a href="/logout" class="logout-btn"
+				onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+		</div>
+	</nav>
+	<form id="logoutForm" th:action="@{/logout}" method="post"></form>
+
+	<div sec:authorize="hasRole('ADMIN')" class="container">
+		<form action="/attendance/fetch" method="post">
+			<label for="empId">Select Employee:</label> <select name="empId">
+				<option 
+					th:each="user : ${users}" 
+					th:value="${user.emp_id}"
+					th:text="${user.username}"
+					th:selected="${selectedEmpId != null and selectedEmpId == user.emp_id}">
+				</option>
+					<!-- userFullNameMap[user.emp_id] -->
+			</select>
+			<button type="submit">Fetch Attendance</button>
+		</form>
+	
+		<table>
+			<tr>
+				<th>Date</th>
+				<th>Login</th>
+				<th>Logout</th>
+				<th>Scheduled Hours</th>
+				<th>Actual Hours</th>
+				<th>Status</th>
+				<th>Action</th>
+			</tr>
+			<tr th:each="att : ${attendance}">
+				<td th:text="${att.submissionTimestamp != null ? att.submissionTimestamp : '--'}"></td>
+			<!-- 	<p th:text="${att.loginTime != null ? attendance.loginTime : '--:--'}"> </p> -->
+				<td th:text="${att.loginTime} ?: '--'"></td>
+				<td th:text="${att.logoutTime} ?: '--'"></td>
+				<td th:text="${att.scheduledHours} ?: '--'"></td>
+				<td th:text="${att.actualHours} ?: '--'"></td>
+				<td th:text="${att.status}"></td>
+				<td>
+					<form action="/attendance/approve" method="post">
+						<input type="hidden" name="attendanceId" th:value="${att.id}">
+						<button type="submit" th:disabled="${att.status == 'Approved'}">Approve</button>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div sec:authorize="hasRole('USER')">
+    	<h1 style="text-align:center;">Error 401!</h1><br>
+    	<h2 style="text-align:center;">Forbidden Page </h2><br>
+    	<h3 style="text-align:center;">This Page is only for Admins!</h3>
+    </div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			let select = document.querySelector("select[name='empId']");
+			select.addEventListener("change", function() {
+				this.setAttribute("selected", "selected");
+			});
+		});
+	</script>
+</body>
+
+</html>

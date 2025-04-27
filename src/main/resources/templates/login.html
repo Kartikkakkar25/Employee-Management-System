@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/css/nologin/style_login.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <p th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></p>
+        <p th:if="${SuccessPassMessage}" class="success-pass-message" th:text="${SuccessPassMessage}"></p>
+        <p th:if="${successMessage}" class="success-message" th:text="${successMessage}"></p>
+        <p th:if="${logoutMessage}" class="logout-message" th:text="${logoutMessage}"></p>
+        <form th:action="@{/login}" method="post">
+            <input type="text" name="username" class="input-field" placeholder="Username" required/>
+            <input type="password" id="password" name="password" class="input-field" placeholder="Password" required/>
+            <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <button class="link-btn" onclick="window.location.href='/register'">Register</button>
+        <button class="link-btn" onclick="window.location.href='/forgot-password'">Forgot Password?</button>
+    </div>
+    <script>
+    function togglePassword() {
+        var passwordField = document.getElementById("password");
+        if (passwordField.type === "password") {
+            passwordField.type = "text"; // Show password
+        } else {
+            passwordField.type = "password"; // Hide password
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+@charset "UTF-8";
+body {
+	font-family: Arial, sans-serif;
+    background: url('/images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+	/* background-color: #f4f4f4; */
+	margin: 0;
+	padding: 0;
+	height: 100%;
+    
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.5); /* Adjust transparency */
+    z-index: -1; /* Keeps it behind the content */
+}
+
+.navbar {
+	background-color: #333;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 20px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.left-section {
+	display: flex;
+	align-items: center;
+	gap: 40px;
+}
+
+.logo {
+	color: white;
+	font-weight: bold;
+}
+
+.logo a {
+	color: white;
+	text-decoration: none;
+}
+
+.nav-links {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	gap: 15px;
+}
+
+.nav-links li {
+	margin: 0;
+}
+
+.nav-links a {
+	color: white;
+	text-decoration: none;
+	padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-links a:hover {
+	background-color: #575757;
+	border-radius: 5px;
+}
+
+.user-section {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-left: auto;
+}
+
+.user-section span {
+	color: white;
+}
+
+.logout-btn {
+	background-color: #dc3545;
+	color: white;
+	padding: 8px 12px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+	background-color: #c82333;
+}
+
+.container {
+	min-height: 100vh; /* Ensures the container extends full height */
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* .successMessage{
+	padding: 10px;
+	color: green;
+	margin-top: 10px;
+	text-align: center;
+    width: 100%;
+    align-items: center;
+} */ 
+.errorMessage{
+	padding: 10px;
+	color: red;
+	margin-top: 10px;
+	text-align: center;
+    width: 100%;
+    align-items: center;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.alert.success {
+    background-color: #28a745;
+    color: white;
+}
+
+.alert.error {
+    background-color: #dc3545;
+    color: white;
+}
+h2, h3 {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.toggle-label {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 25px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #28a745;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+.disabled-form input, .disabled-form select, .disabled-form button {
+    background-color: #f0f0f0;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.heading-with-status {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* center everything horizontally */
+    gap: 15px; /* space between heading and status */
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.status-indicator {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-active {
+    color: green;
+}
+
+.status-inactive {
+    color: red;
+}

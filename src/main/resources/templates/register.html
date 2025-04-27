@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- xmlns="http://www.w3.org/1999/xhtml" -->
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+<link rel="stylesheet" href="/css/nologin/styleRegister.css">
+<link rel="icon" type="image/x-icon" href="/images/logo.png">
+
+</head>
+<body>
+	<div class="register-container">
+		<h2>Register</h2>
+		<p th:if="${ErrorMessage}" class="error-message"
+			th:text="${ErrorMessage}"></p>
+		<form th:action="@{/register}" id="registerForm" method="post"
+			th:object="${user}">
+			<input type="text" name="username" class="input-field" id="uname" placeholder="Username" th:field="*{username}" required /> 
+			<input type="password" name="password" class="input-field" id="password" placeholder="Password" th:field="*{password}" required />
+			<input type="password" name="confirmPassword" class="input-field" id="passcon" placeholder="Confirm Password" required /> 
+			<input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password 
+			<span id="pass-message" class="pass-message">Passwords do not match!</span>
+			<button type="submit" id="submit" class="btn">Register</button>
+		</form>
+		<a href="/login" class="login-link">Already have an account? Login</a>
+	</div>
+	<script>
+		document
+				.getElementById("registerForm")
+				.addEventListener(
+						"submit",
+						function(event) {
+							var password = document.getElementById("password").value;
+							var confirmPassword = document
+									.getElementById("passcon").value;
+							var errorMessage = document
+									.getElementById("pass-message");
+
+							if (password !== confirmPassword) {
+								errorMessage.style.display = "block"; // Show error message
+								event.preventDefault(); // Prevent form submission
+							} else {
+								errorMessage.style.display = "none"; // Hide error message
+							}
+						});
+		function togglePassword() {
+			var passwordField = document.getElementById("password");
+			var ConnPasswordField = document.getElementById("passcon");
+			if (passwordField.type === "password"
+					&& ConnPasswordField.type === "password") {
+				passwordField.type = "text"; // Show password
+				ConnPasswordField.type = "text";
+			} else {
+				passwordField.type = "password"; // Hide password
+				ConnPasswordField.type = "password";
+			}
+		}
+	</script>
+</body>
+</html>

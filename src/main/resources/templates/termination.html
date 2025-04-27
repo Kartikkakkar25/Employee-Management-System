@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Termination Form</title>
+    <link rel="stylesheet" href="/css/styleTermination.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+<body>
+<nav class="navbar">
+    <div class="left-section">
+        <div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a></div>
+        <ul class="nav-links">
+            <li><a href="/home" th:href="@{/home}">Home</a></li>
+            <li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+            <li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+        </ul>
+    </div>
+    <div class="user-section">
+        <span th:text="'Hi, ' + ${username}"></span>
+        <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+    </div>
+</nav>
+
+<form id="logoutForm" th:action="@{/logout}" method="post"></form>
+
+<div sec:authorize="hasRole('ADMIN')" class="container">
+    <h2>Termination Form</h2>
+
+    <!-- Success / Error Messages -->
+    <div th:if="${successMessage}" class="alert success">
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert error">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <form th:action="@{/termination/submit}" method="post" th:object="${termination}" id="terminationForm">
+        
+        <div class="form-group">
+            <label>Employee ID:</label>
+            <select id="empIdSelect" th:field="*{user.emp_id}" class="form-control" onchange="fetchEmployeeName()" required>
+                <option value="" selected>-- Select Employee ID --</option>
+                <option th:each="user : ${userFullNameMap}" th:value="${user.key}" th:text="${user.key}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Employee Name:</label>
+            <input type="text" id="employeeName" class="form-control" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Termination Date:</label>
+            <input type="date" th:field="*{termDate}" class="form-control" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Last Working Date:</label>
+            <input type="date" th:field="*{lastWorkDate}" class="form-control" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Termination Status:</label>
+            <select th:field="*{termStatus}" class="form-control" required>
+                <option value="">-- Select Status --</option>
+                <option th:each="status : ${terminationStatusList}" th:value="${status}" th:text="${status}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Termination Reason:</label>
+            <select th:field="*{termReason}" class="form-control" required>
+                <option value="">-- Select Reason --</option>
+                <option th:each="reason : ${terminationReasonList}" th:value="${reason}" th:text="${reason}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Separation Details:</label>
+            <textarea th:field="*{SeparationDetails}" class="form-control" rows="3" required></textarea>
+        </div>
+        
+        <div>
+        	<label for="rehire"> Eligible for Rehire</label>
+        	<!--  <input type="hidden" name="rehire" value="false"/> -->
+        	<input type="checkbox" id="rehire" name="rehire" th:field="*{rehire}" value="true">
+        </div>
+
+        <button type="submit" class="submit-btn">Submit</button>
+
+    </form>
+</div>
+
+<div sec:authorize="hasRole('USER')">
+    <h1 style="text-align:center;">Error 401!</h1><br>
+    <h2 style="text-align:center;">Forbidden Page </h2><br>
+    <h3 style="text-align:center;">This Page is only for Admins!</h3>
+</div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    var userIdNameMap = /*[[${userFullNameMap}]]*/ {};
+    console.log("Loaded userIdNameMap:", userIdNameMap);
+
+    function fetchEmployeeName() {
+        const empId = document.getElementById('empIdSelect').value;
+        const name = userIdNameMap[empId];
+        document.getElementById('employeeName').value = name || '';
+    }
+/*]]>*/
+</script>
+
+</body>
+</html>

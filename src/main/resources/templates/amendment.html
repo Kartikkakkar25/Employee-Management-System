@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<meta charset="UTF-8">
+	<title>Amendment Form</title>
+	<link rel="stylesheet" href="/css/styleAmendment.css">
+	<link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+
+<body>
+	<nav class="navbar">
+		<div class="left-section">
+			<div class="logo"><a href="/home" th:href="@{/home}" class="home-anch">Employee Management System</a>
+			</div>
+			<ul class="nav-links">
+				<li><a href="/home" th:href="@{/home}">Home</a></li>
+				<li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+				<li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+			</ul>
+		</div>
+		<div class="user-section">
+			<span th:text="'Hi, ' + ${username}"></span>
+			<a href="/logout" class="logout-btn"
+				onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+		</div>
+	</nav>
+	<form id="logoutForm" th:action="@{/logout}" method="post"></form>
+	<div sec:authorize="hasRole('ADMIN')" class="container">
+	
+	
+	<!-- Write your Page's code here only -->
+	
+	</div>
+	<div sec:authorize="hasRole('USER')">
+    	<h1 style="text-align:center;">Error 401!</h1><br>
+    	<h2 style="text-align:center;">Forbidden Page </h2><br>
+    	<h3 style="text-align:center;">This Page is only for Admins!</h3>
+    </div>
+	
+</body>
+
+</html>

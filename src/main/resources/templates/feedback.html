@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback</title>
+<link rel="stylesheet" href="/css/styleFeedback.css">
+<link rel="icon" type="image/x-icon" href="/images/logo.png">
+<script>
+	function toggleVisibility() {
+		var feedbackType = document.getElementById("feedbackType").value;
+		var ratingDiv = document.getElementById("ratingDiv");
+		var ratingInputs = document.querySelectorAll('.rating input');
+
+		if (feedbackType === "General Feedback" || feedbackType === "Bug Report") {
+			ratingDiv.style.display = "block";
+		}
+		/* else if(feedbackType === "Bug Report")
+		{
+			ratingDiv.style.display = "block";
+		} */
+		else {
+			ratingDiv.style.display = "none";
+			ratingInputs.forEach(radio => {
+                radio.checked = false;
+            });
+		}
+	}
+	
+	function validateForm() {
+        var feedbackType = document.getElementById("feedbackType").value;
+        var ratingDiv = document.getElementById("ratingDiv");
+        var ratingChecked = document.querySelector('.rating input:checked');
+
+        // If rating is required but not selected, show alert and prevent submission
+        if ((feedbackType === "General Feedback" || feedbackType === "Bug Report") && !ratingChecked) {
+            alert("Please select a rating before submitting.");
+            return false; // Stop form submission
+        }
+
+        return true; // Allow form submission
+    }
+
+    // Ensure correct state on page load
+    document.addEventListener("DOMContentLoaded", toggleVisibility);
+</script>
+</head>
+<body>
+	<nav class="navbar">
+		<div class="left-section">
+			<div class="logo">
+				<a href="/home" th:href="@{/home}" class="home-anch">Employee
+					Management System</a>
+			</div>
+			<ul class="nav-links">
+				<li><a href="/home" th:href="@{/home}">Home</a></li>
+				<li><a href="/FAQ" th:href="@{/FAQ}">FAQs</a></li>
+				<li><a href="/feedback" th:href="@{/feedback}">Feedback</a></li>
+			</ul>
+		</div>
+		<div class="user-section">
+			<span th:text="'Hi, ' + ${username}"></span> <a href="/logout"
+				class="logout-btn"
+				onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Logout</a>
+		</div>
+	</nav>
+
+
+	<!-- Feedback Form -->
+	<form th:action="@{/feedback}" th:object="${feedback}" method="post" onsubmit="return validateForm()">
+		<div class="container">
+			<h2 style="text-align: center;">Feedback Form</h2>
+			
+			
+			<div class="form-group">
+				<label for="feedbackType">Feedback Type</label> 
+				<select id="feedbackType" onchange="toggleVisibility()" th:field="*{feedback_type}" required>
+					<option disabled selected value="none">Select</option>
+					<option th:value="'Bug Report'" value="Bug Report">Bug Report</option>
+					<option th:value="'Feature Request'" value="Feature Request">Feature Request</option>
+					<option th:value="'General Feedback'" value="General Feedback">General Feedback</option>
+				</select>
+			</div>
+
+			<div class="form-group" id="ratingDiv" style="display: none;">
+				<label>Rate Us</label>
+				<div class="rating">
+					<input type="radio" id="star5" name="rating" value="5" th:field="*{feedback_rating}">
+					<label for="star5">&#9733;</label>
+					<input type="radio" id="star4" name="rating" value="4" th:field="*{feedback_rating}">
+					<label for="star4">&#9733;</label>
+					<input type="radio" id="star3" name="rating" value="3" th:field="*{feedback_rating}">
+					<label for="star3">&#9733;</label> 
+					<input type="radio" id="star2" name="rating" value="2" th:field="*{feedback_rating}">
+					<label for="star2">&#9733;</label>
+					<input type="radio" id="star1" name="rating" value="1" th:field="*{feedback_rating}">
+					<label for="star1">&#9733;</label>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="feedback_text">Your Feedback</label>
+				<textarea id="feedback_text" rows="4"
+					placeholder="Enter your feedback here..." th:field="*{feedback_text}" required></textarea>
+			</div>
+
+			<button type="submit" class="submit-btn" >Submit</button>
+			<div th:if="${successMessage}" class="alert">
+				<span th:text="${successMessage}"></span>
+			</div>
+		</div>
+
+		
+	</form>
+	<form id="logoutForm" th:action="@{/logout}" method="post"></form>
+</body>
+</html>
