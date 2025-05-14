@@ -27,6 +27,7 @@
 	<div sec:authorize="hasRole('ADMIN')">
 		<form action="/roster/fetch" method="post">
 			<label for="empId">Select Employee:</label> <select name="empId">
+				<option value="" disabled selected>Select User</option>
 				<option 
 					th:each="user : ${users}" 
 					th:value="${user.emp_id}"
