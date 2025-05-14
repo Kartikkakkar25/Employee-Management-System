@@ -26,8 +26,51 @@
 	</nav>
 	<form id="logoutForm" th:action="@{/logout}" method="post"></form>
 	<div sec:authorize="hasRole('ADMIN')" class="container">
-	
-	
+		<form action="/amendment/fetch" method="post">
+			<label for="empId">Select Employee:</label> 
+			<select name="empId" required>
+			<option value="" disabled selected>Select User</option>
+				<option 
+					th:each="user : ${users}" 
+					th:value="${user.emp_id}"
+					th:text="${user.username}"
+					th:selected="${selectedEmpId != null and selectedEmpId == user.emp_id}">
+				</option>
+					<!-- userFullNameMap[user.emp_id] -->
+			</select>
+			
+			<label for="date">Select Date:</label>
+   			<input type="date" name="date" th:value="${selectedDate}" required />
+			<button type="submit">Fetch Attendance</button>
+		</form>
+		<div th:if="${notFound}">
+		    <p style="color:red;">Attendance not submitted on the selected date.</p>
+		</div>
+		
+		<div th:if="${attendance}">
+		    <form method="post" th:action="@{/amendment/save}" th:object="${attendance}">
+		     
+		        <input type="hidden" id="empId" name="empId" th:value="${selectedEmpId}">
+	 	        <input type="hidden" name="date" th:value="${selectedDate}" />
+		
+		        <label>Login Time:</label>
+		        <input type="time" th:name="loginTime" th:value="${attendance.loginTime}" required /><br/>
+		
+		        <label>Logout Time:</label>
+		        <input type="time" th:name="logoutTime" th:value="${attendance.logoutTime}" required /><br/>
+		        
+		        <p th:text="'Scheduled Hours: ' + ${attendance.ScheduledHours}"  ></p>
+		        <p th:text="'Actual Hours: ' + ${attendance.ActualHours}"  ></p>
+		
+		        
+		
+		        <button type="submit">Save Changes</button>
+		    </form>
+		</div>
+		
+		<div th:if="${param.success}">
+		    <p style="color:green;">Attendance updated successfully!</p>
+		</div>
 	<!-- Write your Page's code here only -->
 	
 	</div>
